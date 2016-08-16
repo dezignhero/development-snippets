@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Override document.write</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+	window.test = {};
+	window.DartUtils = {takeover:function(){}};
+	
+	test.write = function(){
+			// lets collect all elements in the dom at the this moment
+		var elements = document.all || document.getElementsByTagName('*'),
+			// convert arguments to an array object and then concatenate them
+			buffer = Array.prototype.slice.call(arguments);
+		
+		// wrap the html with a span so that we may "jQuery" it
+		buffer.unshift('<span>');
+		buffer.push('</span>');
+		
+			// use jQuery to parse elements
+		var $html = $(buffer.join('')),
+			// get all scripts
+			$scripts = $html.siblings('script');
+		
+		if ($scripts.length)
+			// add all scripts to the dom
+			$scripts.appendTo('head');
+		
+		// add the html to the last element in the dom
+		elements[elements.length - 1].parentNode.innerHTML += $html.html();
+	};
+	
+	document.write('oh,');
+	document.write('<br />');
+	
+	$(window).load(function(){
+		document.write = test.write;
+
+		document.write('yeah');
+		test.write('!!!!!');
+		document.write('<br />');
+		document.write(document.domain);
+		document.write('<br />', '<strong>OK GO</strong>');		
+		document.write('<scr'+'ipt type="text/javascript" src="http://ad.doubleclick.net/adj/dmd.ehow/homepage;vid=0;ugc=0%QC%;%RSI%tile=3;sz=300x250;ord=7659101568935021?"><\/script>')
+		document.write('<br />');
+	});
+		
+	test.write('<br />', 'asdf', '<br />');	
+	document.write('i', 'can', 'haz', 'document');
+	document.write('<br />');
+</script>
+</body>
+</html>

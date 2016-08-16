@@ -1,0 +1,54 @@
+<html>
+<head>
+<title>Cool Stuff Going On Here!</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+function test1() {
+	console.log("[2] test1");
+}
+
+function funkystuff(txt) {
+	console.log("[" + txt + "] funkystuff");
+}
+</script>
+
+Cool Stuff Going On Here!
+
+<script type="text/javascript">
+(function(){
+	var queue = [];
+	 
+	window.addLoadEvent = function(fn, priority) {
+		if (priority==undefined) { priority = 3; }
+		queue.push({
+			fn: fn,
+			priority: priority
+		});
+	}
+	var fireEvents = function() {
+		sortQueue();
+		for(var i=0; i<queue.length; i++) {
+			queue[i].fn();
+		}
+	}
+	var sortQueue = function() {
+		queue.sort(function(a, b) {
+			return a.priority - b.priority;
+		});
+	}
+	$(window).load(fireEvents);
+})();
+
+addLoadEvent(test1, 2);
+addLoadEvent(test1, 2);
+addLoadEvent(test1, 2);
+addLoadEvent(test1, 2);
+addLoadEvent(function(){funkystuff(4);}, 4);
+addLoadEvent(function(){funkystuff(3);}, 3);
+
+
+</script>
+</body>
+</html>
